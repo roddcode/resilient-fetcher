@@ -8,7 +8,9 @@ export class CircuitBreakerOpenError extends Error {
   public readonly state: CircuitState = 'OPEN';
 
   constructor(cooldownRemainingMs: number) {
-    super(`Circuit breaker is OPEN. Cooldown remaining: ${cooldownRemainingMs}ms`);
+    super(
+      `Circuit breaker is OPEN. Cooldown remaining: ${cooldownRemainingMs}ms`,
+    );
     this.name = 'CircuitBreakerOpenError';
     Object.setPrototypeOf(this, CircuitBreakerOpenError.prototype);
   }
@@ -47,7 +49,8 @@ export class CircuitBreaker {
 
   async fire<T>(fn: () => Promise<T>): Promise<T> {
     if (this.state === 'OPEN') {
-      const remaining = this.cooldownDuration - (Date.now() - this.lastFailureTime);
+      const remaining =
+        this.cooldownDuration - (Date.now() - this.lastFailureTime);
 
       if (remaining > 0) {
         throw new CircuitBreakerOpenError(remaining);

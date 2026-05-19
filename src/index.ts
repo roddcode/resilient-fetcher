@@ -1,9 +1,9 @@
 import { calculateBackoff, delay } from './backoff.js';
-import { CircuitBreaker } from './circuit-breaker.js';
 import type { CircuitBreakerOptions } from './circuit-breaker.js';
+import { CircuitBreaker } from './circuit-breaker.js';
 
+export type { CircuitBreakerOptions, CircuitState } from './circuit-breaker.js';
 export { CircuitBreakerOpenError } from './circuit-breaker.js';
-export type { CircuitState, CircuitBreakerOptions } from './circuit-breaker.js';
 
 export interface ResilientFetcherOptions {
   /** Retry attempts after the initial request. Total calls = maxRetries + 1. @default 3 */

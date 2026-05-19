@@ -15,7 +15,11 @@
   },
   "scripts": {
     "build": "tsup",
-    "test": "vitest run"
+    "test": "vitest run",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "changeset": "changeset",
+    "version": "changeset version"
   },
   "keywords": [
     "fetch",
@@ -27,6 +31,8 @@
   "author": "Alejandro Alvarado (roddcode)",
   "license": "MIT",
   "devDependencies": {
+    "@biomejs/biome": "^2.4.15",
+    "@changesets/cli": "^2.31.0",
     "@types/node": "^25.9.0",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",

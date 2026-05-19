@@ -101,7 +101,9 @@ describe('createResilientFetcher', () => {
       .mockRejectedValueOnce(new Error('down'));
 
     for (let i = 0; i < 2; i++) {
-      await expect(fetcher('https://api.example.com/probe')).rejects.toThrow('down');
+      await expect(fetcher('https://api.example.com/probe')).rejects.toThrow(
+        'down',
+      );
     }
 
     // Advance past cooldown so remaining <= 0 when both calls enter fire().
@@ -118,10 +120,14 @@ describe('createResilientFetcher', () => {
       fetcher('https://api.example.com/probe'),
     ]);
 
-    const errors = [a, b].map((r) => (r as PromiseRejectedResult).reason as Error);
+    const errors = [a, b].map(
+      (r) => (r as PromiseRejectedResult).reason as Error,
+    );
 
     const networkErrors = errors.filter((e) => e.message === 'still down');
-    const circuitErrors = errors.filter((e) => e instanceof CircuitBreakerOpenError);
+    const circuitErrors = errors.filter(
+      (e) => e instanceof CircuitBreakerOpenError,
+    );
 
     expect(networkErrors).toHaveLength(1);
     expect(circuitErrors).toHaveLength(1);
