@@ -115,21 +115,35 @@ Thrown when the circuit is `OPEN`. Extends `Error`. Carries `.state: 'OPEN'` for
 
 ## Architecture
 
-```
-resilientFetch(input, init)
-       │
-       ▼
- CircuitBreaker.fire()
-  ├─ OPEN?  → throw CircuitBreakerOpenError  (no network hit)
-  ├─ HALF_OPEN → allow one probe
-  └─ CLOSED → proceed
-       │
-       ▼
-  retry loop (attempt 0..maxRetries)
-  ├─ attempt > 0 → delay(calculateBackoff(attempt, baseDelay, maxDelay))
-  ├─ globalThis.fetch(input, init)
-  ├─ shouldRetry(response)? → continue loop
-  └─ return response
+The primitive operates as a recursive state machine wrapping the native fetch API:
+
+```mermaid
+flowchart TD
+    Start([resilientFetch]) --> CB{CircuitBreaker.fire()}
+    
+    CB -- OPEN --> Err[Throw CircuitBreakerOpenError]
+    CB -- HALF_OPEN --> Allow[Allow 1 Probe]
+    CB -- CLOSED --> Proceed[Proceed to Network]
+    
+    Allow --> Loop
+    Proceed --> Loop
+    
+    subgraph Loop [Retry Loop: attempt 0 to maxRetries]
+        direction TB
+        AttemptCheck{attempt > 0?}
+        Delay[apply delay: calculateBackoff()]
+        Fetch[globalThis.fetch]
+        RetryCheck{shouldRetry?}
+        
+        AttemptCheck -- Yes --> Delay --> Fetch
+        AttemptCheck -- No --> Fetch
+        
+        Fetch --> RetryCheck
+        RetryCheck -- Yes --> NextAttempt[attempt++] --> AttemptCheck
+    end
+    
+    RetryCheck -- No --> Return([Return Response])
+    Err --> End((Fail Fast))
 ```
 
 ---
