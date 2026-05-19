@@ -119,31 +119,31 @@ The primitive operates as a recursive state machine wrapping the native fetch AP
 
 ```mermaid
 flowchart TD
-    Start([resilientFetch]) --> CB{CircuitBreaker.fire()}
+    Start(["resilientFetch"]) --> CB{"CircuitBreaker.fire()"}
     
-    CB -- OPEN --> Err[Throw CircuitBreakerOpenError]
-    CB -- HALF_OPEN --> Allow[Allow 1 Probe]
-    CB -- CLOSED --> Proceed[Proceed to Network]
+    CB -- OPEN --> Err["Throw CircuitBreakerOpenError"]
+    CB -- HALF_OPEN --> Allow["Allow 1 Probe"]
+    CB -- CLOSED --> Proceed["Proceed to Network"]
     
     Allow --> Loop
     Proceed --> Loop
     
     subgraph Loop [Retry Loop: attempt 0 to maxRetries]
         direction TB
-        AttemptCheck{attempt > 0?}
-        Delay[apply delay: calculateBackoff()]
-        Fetch[globalThis.fetch]
-        RetryCheck{shouldRetry?}
+        AttemptCheck{"attempt > 0?"}
+        Delay["apply delay: calculateBackoff()"]
+        Fetch["globalThis.fetch"]
+        RetryCheck{"shouldRetry?"}
         
         AttemptCheck -- Yes --> Delay --> Fetch
         AttemptCheck -- No --> Fetch
         
         Fetch --> RetryCheck
-        RetryCheck -- Yes --> NextAttempt[attempt++] --> AttemptCheck
+        RetryCheck -- Yes --> NextAttempt["attempt++"] --> AttemptCheck
     end
     
-    RetryCheck -- No --> Return([Return Response])
-    Err --> End((Fail Fast))
+    RetryCheck -- No --> Return(["Return Response"])
+    Err --> End(("Fail Fast"))
 ```
 
 ---
