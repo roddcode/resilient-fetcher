@@ -150,4 +150,4 @@ flowchart TD
 
 ## License
 
-MIT © [Alejandro Alvarado](https://github.com/roddcode)
+MIT © Alejandro Alvarado
