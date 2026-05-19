@@ -1,0 +1,35 @@
+{
+  "name": "resilient-fetcher",
+  "version": "1.0.0",
+  "description": "TypeScript utility wrapper for native fetch with exponential backoff and circuit breaking.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "fetch",
+    "resilience",
+    "circuit-breaker",
+    "nextjs",
+    "edge"
+  ],
+  "author": "Alejandro Alvarado (roddcode)",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^25.9.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.6"
+  }
+}
